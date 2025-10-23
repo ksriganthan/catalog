@@ -13,16 +13,12 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    // Suchmethode mit UND-Verknüpfung (case-insensitive)
-    public List<Book> searchBooks(String keywordString) {
-        // Eingabe: "felix microservice" → ["felix", "microservice"]
-        String[] words = keywordString.toLowerCase().split("\\s+");
-
-        // Alle Bücher laden (könnte man später optimieren)
+    // Suchmethode mit UND-Verknüpfung (case-insensitive) und verschiedenen Keywords
+    public List<Book> searchBooks(List<String>keywords) {
         List<Book> result = bookRepository.findAll();
 
-        // UND-Filter: Buch muss alle Wörter enthalten
-        for (String w : words) {
+        for (String w : keywords) {
+            String word = w.toLowerCase();
             result = result.stream()
                     .filter(b -> (
                             (b.getTitle() + " " + b.getDescription() + " " +
@@ -30,7 +26,7 @@ public class BookService {
                     ).contains(w))
                     .toList();
         }
-
+        // Es wird Keyword für Keyword gefiltert pro Runde
         return result;
     }
 
