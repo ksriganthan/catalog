@@ -20,7 +20,6 @@ public class BookRestController {
     @GetMapping("/search")
     public List<Book> searchBooks(@RequestParam List<String> keyword) {
        List<Book> result = bookService.searchBooks(keyword);
-       System.out.println(result);
        return result;
     }
 }
