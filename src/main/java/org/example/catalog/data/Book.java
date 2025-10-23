@@ -2,6 +2,7 @@ package org.example.catalog.data;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ public class Book {
     private String description;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Author> authors;
+    private List<Author> authors = new ArrayList<>();
 
     public Book(String ISBN, String title, String description, List<Author> authors) {
         this.ISBN = ISBN;
@@ -58,6 +59,21 @@ public class Book {
 
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
+    }
+
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        if (author.getBook() != this) {
+            author.setBook(this);
+        }
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        if (author.getBook() == this) {
+            author.setBook(null);
+        }
     }
 
     @Override

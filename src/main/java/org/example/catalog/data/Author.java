@@ -52,4 +52,18 @@ public class Author {
     public String toString() {
         return "Author [name=" + this.name + ", surname=" + this.surname + "]";
     }
+
+    public Book getBook() {
+        return this.book;
+    }
+
+    public void setBook(Book newBook) {
+        if (this.book != null && this.book.getAuthors() != null) {
+            this.book.getAuthors().remove(this);
+        }
+        this.book = newBook;
+        if (newBook != null && !newBook.getAuthors().contains(this)) {
+            newBook.getAuthors().add(this);
+        }
+    }
 }
