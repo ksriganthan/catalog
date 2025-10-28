@@ -2,8 +2,6 @@ package org.example.catalog.data;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 public class Book {
     @Id
@@ -14,20 +12,24 @@ public class Book {
     @Column(name = "Beschreibung", nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Author> authors;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")  // Fremdschlüssel auf Author
+    private Author author;
 
-    public Book(String ISBN, String title, String description, List<Author> authors) {
+    public Book(String ISBN, String title, String description, Author author) {
         this.ISBN = ISBN;
         this.title = title;
         this.description = description;
-        this.authors = authors;
+        this.author = author;
     }
 
     public Book() {
 
     }
 
+    public Author getAuthor() {
+        return author;
+    }
     public String getISBN() {
         return this.ISBN;
     }
@@ -52,19 +54,10 @@ public class Book {
         this.description = description;
     }
 
-    public List<Author> getAuthors() {
-        return this.authors;
-    }
-
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
-    }
 
     @Override
     public String toString() {
-        return "Book [ISBN=" + this.ISBN + ", title=" + this.title + ", description=" + this.description + ", authors=" + this.authors + "]";
+        return "Book [ISBN=" + this.ISBN + ", title=" + this.title + ", description=" + this.description + ", authors=" + this.author + "]";
     }
-
-
 
 }
