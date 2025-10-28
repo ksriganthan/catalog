@@ -11,6 +11,10 @@ public class BookService {
 
     private BookRepository bookRepository;
 
+    public BookService() {
+        this.bookRepository = bookRepository;
+    }
+
     // Suchmethode mit UND-Verknüpfung (case-insensitive) und verschiedene Keywords
     public List<Book> searchBooks(List<String> keywords) {
         List<Book> result = bookRepository.findAll();
