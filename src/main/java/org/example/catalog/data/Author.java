@@ -1,26 +1,30 @@
 package org.example.catalog.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Author {
     @Id
+    @GeneratedValue
     private int authorId;
     @Column(name = "Name", nullable = false)
     private String name;
     @Column(name = "Nachname", nullable = false)
     private String surname;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore  // Damit keine Endlosschleife bei JSON entsteht -- noch anschauen!
+    @ManyToMany()
+    @JoinTable(name = "book_author",
+            joinColumns = @JoinColumn(name = "authorId"),
+            inverseJoinColumns = @JoinColumn(name = "ISBN"))
+    @JsonBackReference
     private List<Book> books = new ArrayList<>();
 
-    public Author(int authorId, String name, String surname) {
-        this.authorId = authorId;
+    public Author(String name, String surname) {
         this.name = name;
         this.surname = surname;
     }
@@ -66,5 +70,15 @@ public class Author {
         return "Author [name=" + this.name + ", surname=" + this.surname + "]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        return authorId == author.authorId;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(authorId);
+    }
 }
