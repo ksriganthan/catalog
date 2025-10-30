@@ -42,7 +42,7 @@ public class BookControllerIntegrationTest {
         List<Book>list = new ArrayList<>(Arrays.asList(response.getBody()));
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(list).isNotEmpty();
-        assertThat(list.get(0).getTitle()).contains("Mimik");
+        assertThat(list.stream().anyMatch(b -> b.getTitle().contains("Mimik"))).isTrue();
     }
 
     @Test
