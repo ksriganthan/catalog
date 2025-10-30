@@ -1,5 +1,6 @@
 package org.example.catalog.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -17,7 +18,7 @@ public class Book {
     private String description;
 
     @ManyToMany(mappedBy = "books")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Author> authors = new ArrayList<>();
 
     public Book(String ISBN, String title, String description) {
