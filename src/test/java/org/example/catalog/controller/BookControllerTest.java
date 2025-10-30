@@ -29,11 +29,11 @@ public class BookControllerTest {
     @Test
     void testGetBooks() throws Exception{
         List<String>keywords = new ArrayList<>(Arrays.asList("Fitzek","Nachbar","Mimik"));
-        Book b3 = new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie");
-        Book b5 = new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern");
+        Book book3 = new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie");
+        Book book5 = new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern");
 
 
-        when(bookService.searchBooks(keywords)).thenReturn(List.of(b3,b5));
+        when(bookService.searchBooks(keywords)).thenReturn(List.of(book3,book5));
 
         mockMvc.perform(get("/books/search?keyword="))
                 .andExpect(status().isOk());
