@@ -1,6 +1,7 @@
 package org.example.catalog.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class Author {
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "authorId"),
             inverseJoinColumns = @JoinColumn(name = "ISBN"))
-    @JsonBackReference
+    @JsonIgnore
     private List<Book> books = new ArrayList<>();
 
     public Author(String name, String surname) {
