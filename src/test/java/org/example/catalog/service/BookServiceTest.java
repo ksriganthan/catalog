@@ -32,18 +32,26 @@ public class BookServiceTest {
             throw new RuntimeException("Fehler beim Einfügen von Mock BookRepository ",e);
         }
 
-        Author a1 = new Author(1, "Joanne K.", "Rowling");
-        Author a2 = new Author(2, "Stephen", "King");
-        Author a3 = new Author(3, "Sebastian", "Fitzek");
-        Author a4 = new Author(4, "Guillaume", "Musso");
+        Author a1 = new Author("Joanne K.", "Rowling");
+        Author a2 = new Author("Stephen", "King");
+        Author a3 = new Author("Sebastian", "Fitzek");
+        Author a4 = new Author("Guillaume", "Musso");
 
         List<Book> testBooks = List.of(
-                new Book("9783551557414", "Harry Potter und der Stein der Weisen", "Harry Potter Teil 1", a1),
-                new Book("9783453435773", "ES", "Clown der Kinder frisst", a2),
-                new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie", a3),
-                new Book("9783492309257", "Nacht im Central Park", "Polizistin und Jazzpianist werden entführt", a4),
-                new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern", a3)
+                new Book("9783551557414", "Harry Potter und der Stein der Weisen", "Harry Potter Teil 1"),
+                new Book("9783453435773", "ES", "Clown der Kinder frisst"),
+                new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie"),
+                new Book("9783492309257", "Nacht im Central Park", "Polizistin und Jazzpianist werden entführt"),
+                new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern")
         );
+
+        // Autoren zuweisen - Im Normalfall müsste man hier eine Rückverknüpfung machen
+        // Da es aber nur ein Test ist, braucht es diese Richtung hier nicht.
+        testBooks.get(0).getAuthors().add(a1);
+        testBooks.get(1).getAuthors().add(a2);
+        testBooks.get(2).getAuthors().add(a3);
+        testBooks.get(3).getAuthors().add(a4);
+        testBooks.get(4).getAuthors().add(a3);
 
         when(bookRepository.findAll()).thenReturn(testBooks);
     }
@@ -66,7 +74,7 @@ public class BookServiceTest {
     void findBookByAuthorTwoBooks() {
         var result = bookService.searchBooks(List.of("Fitzek"));
         assertEquals(2, result.size());
-        assertEquals("Sebastian", result.get(0).getAuthor().getName());
+        assertEquals("Sebastian", result.get(0).getAuthors().get(0).getName());
     }
 
     @Test

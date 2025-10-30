@@ -1,6 +1,10 @@
 package org.example.catalog.data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Book {
@@ -12,24 +16,21 @@ public class Book {
     @Column(name = "Beschreibung", nullable = false)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id")  // Fremdschlüssel auf Author
-    private Author author;
+    @ManyToMany(mappedBy = "books")
+    @JsonManagedReference
+    private List<Author> authors = new ArrayList<>();
 
-    public Book(String ISBN, String title, String description, Author author) {
+    public Book(String ISBN, String title, String description) {
         this.ISBN = ISBN;
         this.title = title;
         this.description = description;
-        this.author = author;
     }
 
     public Book() {
 
     }
 
-    public Author getAuthor() {
-        return author;
-    }
+
     public String getISBN() {
         return this.ISBN;
     }
@@ -54,10 +55,17 @@ public class Book {
         this.description = description;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
 
     @Override
     public String toString() {
-        return "Book [ISBN=" + this.ISBN + ", title=" + this.title + ", description=" + this.description + ", authors=" + this.author + "]";
+        return "Book [ISBN=" + this.ISBN + ", title=" + this.title + ", description=" + this.description + ", authors=" + this.authors + "]";
     }
 
 }

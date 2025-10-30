@@ -2,6 +2,7 @@ package org.example.catalog.service;
 
 import org.example.catalog.data.Book;
 import org.example.catalog.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Service
 public class BookService {
 
+    @Autowired
     private BookRepository bookRepository;
 
     public BookService() {
@@ -24,9 +26,7 @@ public class BookService {
             result = result.stream()
                     .filter(b -> {
                         String allText =
-                                (b.getTitle() + " " + b.getDescription() + " " +
-                                b.getAuthor().getName() + " " + b.getAuthor().getSurname())
-                                .toLowerCase();
+                                (b.getTitle() + " " + b.getDescription() + b.getAuthors().toString()).toLowerCase();
                         return allText.contains(word);
                     }).toList();
         }
