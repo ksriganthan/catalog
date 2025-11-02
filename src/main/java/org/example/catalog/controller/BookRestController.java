@@ -18,7 +18,7 @@ public class BookRestController {
     private BookService bookService;
 
     @GetMapping("/search")
-    public List<Book> searchBooks(@RequestParam List<String> keyword) {
+    public List<Book> searchBooks(@RequestParam(required = false) List<String> keyword ) {
        List<Book> result = bookService.searchBooks(keyword);
        return result;
     }
