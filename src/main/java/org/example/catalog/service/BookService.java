@@ -26,7 +26,7 @@ public class BookService {
                 result = result.stream()
                         .filter(b -> {
                             String allText =
-                                    (b.getTitle() + " " + b.getDescription() + b.getAuthors().toString()).toLowerCase();
+                                    (b.getISBN() + " " + b.getTitle() + " " + b.getDescription() + b.getAuthors().toString()).toLowerCase();
                             return allText.contains(word);
                         }).toList();
             }
