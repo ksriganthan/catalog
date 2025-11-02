@@ -20,15 +20,16 @@ public class BookService {
     // Suchmethode mit UND-Verknüpfung (case-insensitive) und verschiedene Keywords
     public List<Book> searchBooks(List<String> keywords) {
         List<Book> result = bookRepository.findAll();
-
-        for (String w : keywords) {
-            String word = w.toLowerCase();
-            result = result.stream()
-                    .filter(b -> {
-                        String allText =
-                                (b.getTitle() + " " + b.getDescription() + b.getAuthors().toString()).toLowerCase();
-                        return allText.contains(word);
-                    }).toList();
+        if(keywords != null) {
+            for (String w : keywords) {
+                String word = w.toLowerCase();
+                result = result.stream()
+                        .filter(b -> {
+                            String allText =
+                                    (b.getTitle() + " " + b.getDescription() + b.getAuthors().toString()).toLowerCase();
+                            return allText.contains(word);
+                        }).toList();
+            }
         }
         return result;
     }
