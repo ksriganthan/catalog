@@ -75,7 +75,19 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-http</artifactId>
+            <version>3.14.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-http-java</artifactId>
+            <version>3.14.7</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
