@@ -5,6 +5,7 @@ import org.example.catalog.data.Book;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.*;
 
@@ -12,7 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // damit BeforeAll nicht static sein muss
 
-@DataJpaTest // Die richtige H2-DB wird verwendet
+@DataJpaTest
+@ActiveProfiles("test")// Die richtige H2-DB wird verwendet
 public class BookRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
