@@ -1,9 +1,11 @@
 package org.example.catalog.repository;
 
+import org.example.catalog.PostgresContainerTest;
 import org.example.catalog.data.Author;
 import org.example.catalog.data.Book;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -11,11 +13,12 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // damit BeforeAll nicht static sein muss
+
 
 @DataJpaTest
-@ActiveProfiles("test")// Die richtige H2-DB wird verwendet
-public class BookRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // damit BeforeAll nicht static sein muss
+public class BookRepositoryTest extends PostgresContainerTest {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
