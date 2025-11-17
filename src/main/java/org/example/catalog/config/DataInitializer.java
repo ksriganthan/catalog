@@ -28,7 +28,7 @@ public class DataInitializer {
 
     @PostConstruct
     public void init(){
-        if (bookRepository.count() == 0) {
+
 
             Author a1 = new Author("Joanne K.", "Rowling");
             Author a2 = new Author("Stephen", "King");
@@ -40,14 +40,17 @@ public class DataInitializer {
             Book b3 = new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie");
             Book b4 = new Book("9783492309257", "Nacht im Central Park", "Polizistin und Jazzpianist werden entführt");
             Book b5 = new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern");
+            Book b6 = new Book("9783551557415", "Harry Potter und die Kammer des Schreckens", "Harry Potter Teil 2");
 
             b1.getAuthors().add(a1);
             b2.getAuthors().add(a2);
             b3.getAuthors().add(a3);
             b4.getAuthors().add(a4);
             b5.getAuthors().add(a3);
+            b6.getAuthors().add(a1);
 
             a1.getBooks().add(b1);
+            a1.getBooks().add(b6);
             a2.getBooks().add(b2);
             a3.getBooks().add(b3);
             a4.getBooks().add(b4);
@@ -58,6 +61,7 @@ public class DataInitializer {
             bookRepository.save(b3);
             bookRepository.save(b4);
             bookRepository.save(b5);
+            bookRepository.save(b6);
 
             authorRepository.save(a1);
             authorRepository.save(a2);
@@ -65,8 +69,6 @@ public class DataInitializer {
             authorRepository.save(a4);
 
             System.out.println("Data initializer erfolgreich geladen");
-        } else {
-            System.out.println("Daten wurden nicht geladen, Datenbank enthält bereits Bücher");
-        }
+
     }
 }

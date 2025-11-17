@@ -7,6 +7,12 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,14 +21,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // damit BeforeAll nicht static sein muss
-public class BookRepositoryTest extends PostgresContainerTest {
+@Testcontainers
+
+public class BookRepositoryTest {
+ /*
+ Hier muss man den Testcontainer als Objekt reinbringen, da dieser mit DataJpaTest nicht kompatibel ist.
+ Eine möglich Lösung wäre gewesen anstatt DataJpaTest SpringBootTest zu verwenden. Aber dann verliert dieser Test
+ seinen Sinn.
+  */
+    @Container
+    static PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:16")
+                    .withDatabaseName("catalog")
+                    .withUsername("catalog")
+                    .withPassword("catalog");
+
+    @DynamicPropertySource
+    static void registerDbProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private AuthorRepository authorRepository;
 
-    @BeforeAll
+    @BeforeEach
      void SetUp() {
         Author a1 = new Author("Joanne K.", "Rowling");
         Author a2 = new Author("Stephen", "King");
@@ -34,6 +61,18 @@ public class BookRepositoryTest extends PostgresContainerTest {
         Book b3 = new Book("9783426281758", "Der Nachbar", "Frau leidet an Monophobie, Nachbar verfolgt sie");
         Book b4 = new Book("9783492309257", "Nacht im Central Park", "Polizistin und Jazzpianist werden entführt");
         Book b5 = new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern");
+
+        //Zuert Objekt speichern und dann die Relationen. DB-Policy bei PostgreSql ist strenger als bei H2
+        authorRepository.save(a1);
+        authorRepository.save(a2);
+        authorRepository.save(a3);
+        authorRepository.save(a4);
+
+        bookRepository.save(b1);
+        bookRepository.save(b2);
+        bookRepository.save(b3);
+        bookRepository.save(b4);
+        bookRepository.save(b5);
 
         b1.getAuthors().add(a1);
         b2.getAuthors().add(a2);
@@ -47,16 +86,17 @@ public class BookRepositoryTest extends PostgresContainerTest {
         a4.getBooks().add(b4);
         a3.getBooks().add(b5);
 
+        authorRepository.save(a1);
+        authorRepository.save(a2);
+        authorRepository.save(a3);
+        authorRepository.save(a4);
+
         bookRepository.save(b1);
         bookRepository.save(b2);
         bookRepository.save(b3);
         bookRepository.save(b4);
         bookRepository.save(b5);
 
-        authorRepository.save(a1);
-        authorRepository.save(a2);
-        authorRepository.save(a3);
-        authorRepository.save(a4);
     }
 
 
