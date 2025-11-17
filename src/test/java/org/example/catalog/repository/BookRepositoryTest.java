@@ -1,6 +1,5 @@
 package org.example.catalog.repository;
 
-import org.example.catalog.PostgresContainerTest;
 import org.example.catalog.data.Author;
 import org.example.catalog.data.Book;
 import org.junit.jupiter.api.*;
@@ -25,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BookRepositoryTest {
  /*
- Hier muss man den Testcontainer als Objekt reinbringen, da dieser mit DataJpaTest nicht kompatibel ist.
- Eine möglich Lösung wäre gewesen anstatt DataJpaTest SpringBootTest zu verwenden. Aber dann verliert dieser Test
- seinen Sinn.
+ Hier muss man den Testcontainer direkt rein injizieren, da dieser mit @DataJpaTest nicht kompatibel ist.
+ Eine mögliche Lösung wäre gewesen, anstatt DataJpaTest den @SpringBootTest zu verwenden.
+ Aber dann verliert dieser Test seinen Sinn.
   */
     @Container
     static PostgreSQLContainer<?> postgres =
@@ -62,7 +61,7 @@ public class BookRepositoryTest {
         Book b4 = new Book("9783492309257", "Nacht im Central Park", "Polizistin und Jazzpianist werden entführt");
         Book b5 = new Book("9783426519486", "Mimik", "Frau leidet an Gedächtnisverlust und versucht den Mord an Paul zu verhindern");
 
-        //Zuert Objekt speichern und dann die Relationen. DB-Policy bei PostgreSql ist strenger als bei H2
+        //Zuerst die Objekte speichern und dann die Relationen -> DB-Policy bei PostgreSql ist strenger als bei H2
         authorRepository.save(a1);
         authorRepository.save(a2);
         authorRepository.save(a3);
