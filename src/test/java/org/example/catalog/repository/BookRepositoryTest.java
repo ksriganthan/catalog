@@ -1,15 +1,12 @@
 package org.example.catalog.repository;
 
+import org.example.catalog.PostgresContainerTest;
 import org.example.catalog.data.Author;
 import org.example.catalog.data.Book;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.*;
@@ -19,30 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
+// Verhindert den Start von H2
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-
-public class BookRepositoryTest {
+// PostgresSQL im Docker starten!
+public class BookRepositoryTest extends PostgresContainerTest {
  /*
  Hier muss man den Testcontainer direkt rein injizieren, da dieser mit @DataJpaTest nicht kompatibel ist.
  Eine mögliche Lösung wäre gewesen, anstatt DataJpaTest den @SpringBootTest zu verwenden.
  Aber dann verliert dieser Test seinen Sinn.
   */
-    @Container
-    static PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("catalog")
-                    .withUsername("catalog")
-                    .withPassword("catalog");
-
-    @DynamicPropertySource
-    static void registerDbProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
-
     @Autowired
     private BookRepository bookRepository;
     @Autowired
