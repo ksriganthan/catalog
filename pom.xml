@@ -42,7 +42,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
@@ -60,7 +65,8 @@
 			<version>1.19.7</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
+
+        <dependency>
 			<!-- Testcontainer: PostgreSQL -->
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
