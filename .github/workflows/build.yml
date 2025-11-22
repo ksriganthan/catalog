@@ -38,10 +38,11 @@ jobs:
       # 6. Docker Image benennen & pushen
       - name: Tag and Push Image
         run: |
-          docker tag catalog:latest ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+          docker tag docker.io/library/catalog:latest ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+  
 
-      # BONUS: Jacoco Coverage uploaden
+  # BONUS: Jacoco Coverage uploaden
       - name: Upload Jacoco Coverage
         uses: actions/upload-artifact@v4
         with:
