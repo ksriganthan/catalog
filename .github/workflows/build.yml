@@ -38,7 +38,7 @@ jobs:
       # 6. Docker Image benennen & pushen
       - name: Tag and Push Image
         run: |
-          docker tag docker.io/library/catalog:latest ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+          docker tag docker.io/library/catalog:0.0.1-SNAPSHOT ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
   
 
