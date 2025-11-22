@@ -4,16 +4,17 @@ package org.example.catalog.config;
 Klasse lädt zu Beginn immer Beispiel-Daten in die H2-Datenbank
  */
 
-import jakarta.annotation.PostConstruct;
+
 import org.example.catalog.data.Author;
 import org.example.catalog.data.Book;
 import org.example.catalog.repository.AuthorRepository;
 import org.example.catalog.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataInitializer {
+public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private final BookRepository bookRepository;
@@ -25,11 +26,9 @@ public class DataInitializer {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
     }
-
-    @PostConstruct
-    public void init(){
-
-if(bookRepository.count() == 0) {
+    @Override
+    public void run(String... args) throws Exception {
+    if(bookRepository.count() == 0) {
     Author a1 = new Author("Joanne K.", "Rowling");
     Author a2 = new Author("Stephen", "King");
     Author a3 = new Author("Sebastian", "Fitzek");
