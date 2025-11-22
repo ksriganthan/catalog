@@ -19,9 +19,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      # 2.5 Playwright Browser installieren
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
 
       # 3. Maven Build + Tests
       - name: Build and Test
