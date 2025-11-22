@@ -26,7 +26,7 @@ jobs:
 
       # 4. Docker Buildpack: Image bauen
       - name: Build Docker Image with Buildpacks
-        run: mvn spring-boot:build-image -DskipTests
+        run: mvn spring-boot:build-image
 
       # 5. In Docker Hub einloggen
       - name: Docker Login
