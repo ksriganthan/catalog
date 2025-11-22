@@ -1,0 +1,49 @@
+name: Catalog CI/CD
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code herunterladen
+      - uses: actions/checkout@v5
+
+      # 2. Java einrichten + Maven Cache aktivieren
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      # 3. Maven Build + Tests
+      - name: Build and Test
+        run: mvn --batch-mode --update-snapshots verify
+
+      # 4. Docker Buildpack: Image bauen
+      - name: Build Docker Image with Buildpacks
+        run: mvn spring-boot:build-image -DskipTests
+
+      # 5. In Docker Hub einloggen
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 6. Docker Image benennen & pushen
+      - name: Tag and Push Image
+        run: |
+          docker tag catalog:latest ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+
+      # BONUS: Jacoco Coverage uploaden
+      - name: Upload Jacoco Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-coverage
+          path: target/site/jacoco
