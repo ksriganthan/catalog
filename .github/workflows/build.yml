@@ -1,58 +1,52 @@
-name: Catalog CI/CD
+name: Catalog CI/CD #Titel für den Workflow
 
-on:
-  push:
-  pull_request:
+on: # Trigger für den Workflow
+  push: # Bei jedem Push ins Repository (egal welcher Branch)
+  pull_request: # Bei jedem Pull Request ins Repository (egal welcher Branch)
 
-jobs:
+jobs: # Definition der Jobs (build, test, deploy, etc.)
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Job läuft auf einem Ubuntu-Linux Runner
 
-    steps:
-      # 1. Code herunterladen
-      - uses: actions/checkout@v5
+    steps: # Schritte des Jobs
+      - uses: actions/checkout@v5 # Code aus dem Repository auschecken
 
-      # 2. Java einrichten + Maven Cache aktivieren
-      - name: Set up Java
-        uses: actions/setup-java@v4
+      - name: Set up Java # Einrichtung von Java 21
+        uses: actions/setup-java@v4 #Github Action zum Einrichten von Java
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: maven # Maven Abhängigkeiten cachen -> BONUS
 
-      # 3. Maven Build + Tests
-      - name: Build and Test
-        run: mvn --batch-mode --update-snapshots verify
+      - name: Build and Test with Maven # Maven Build & Test
+        run: mvn --batch-mode --update-snapshots verify # beinhaltet compile, unittests, integration tests, package, verify
 
-      # 4. Docker Buildpack: Image bauen
-      - name: Build Docker Image with Buildpacks
-        run: mvn spring-boot:build-image
+      - name: Build Docker Image with Buildpacks # Docker Image mit Spring Boot Buildpacks bauen
+        run: mvn spring-boot:build-image # Befehl zum Bauen des Docker Images mit Buildpacks
+        # Buildpack erkennt automatisch: Base Image, JDK Runtime, App kopieren (Layering), Dependencies, Entrypoint
 
-      # 5. In Docker Hub einloggen
-      - name: Docker Login
-        uses: docker/login-action@v3
+      - name: Docker Login # Login in Docker Hub
+        uses: docker/login-action@v3 # Github Action zum Login in Docker Hub
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # Docker Hub Username aus GitHub Secrets
+          password: ${{ secrets.DOCKERHUB_TOKEN }} # Docker Hub Token aus GitHub Secrets
 
-      # 6. Docker Image benennen & pushen
-      - name: Tag and Push Image
-        run: |
-          docker tag docker.io/library/catalog:0.0.1-SNAPSHOT ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest
+      - name: Tag and Push Image # Docker Image taggen und pushen
+        run: | # Mehrzeiliger Befehl
+          docker tag docker.io/library/catalog:0.0.1-SNAPSHOT ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest # Image taggen
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest # Image zu Docker Hub pushen
   
 
-  # BONUS: Jacoco Coverage uploaden
-      - name: Upload Surefire Reports
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Upload Surefire Reports # Upload der Surefire Reports als Artefakt (Testresultate publizieren)
+        if: always() # Immer ausführen, auch wenn vorherige Schritte fehlschlagen
+        uses: actions/upload-artifact@v4 # Github Action zum Upload von Artefakten
         with:
           name: surefire-reports
           path: target/surefire-reports
 
-      - name: Upload Jacoco Coverage
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Upload Jacoco Coverage # Upload der Jacoco Coverage Reports als Artefakt (Bonus)
+        if: always() # Immer ausführen, auch wenn vorherige Schritte fehlschlagen
+        uses: actions/upload-artifact@v4 # Github Action zum Upload von Artefakten
         with:
           name: catalog-coverage
           path: target/site/jacoco
