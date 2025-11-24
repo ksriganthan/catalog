@@ -1,4 +1,4 @@
-name: Catalog CI/CD #Titel für den Workflow
+name: Catalog CI #Titel für den Workflow
 
 on: # Trigger für den Workflow
   push: # Bei jedem Push ins Repository (egal welcher Branch)
@@ -19,7 +19,7 @@ jobs: # Definition der Jobs (build, test, deploy, etc.)
           cache: maven # Maven Abhängigkeiten cachen -> BONUS
 
       - name: Build and Test with Maven # Maven Build & Test
-        run: mvn --batch-mode --update-snapshots verify # beinhaltet compile, unittests, integration tests, package, verify
+        run: mvn --batch-mode --update-snapshots verify # beinhaltet compile, unit-tests, integration tests, package, verify
 
       - name: Build Docker Image with Buildpacks # Docker Image mit Spring Boot Buildpacks bauen
         run: mvn spring-boot:build-image # Befehl zum Bauen des Docker Images mit Buildpacks
@@ -32,9 +32,9 @@ jobs: # Definition der Jobs (build, test, deploy, etc.)
           password: ${{ secrets.DOCKERHUB_TOKEN }} # Docker Hub Token aus GitHub Secrets
 
       - name: Tag and Push Image # Docker Image taggen und pushen
-        run: | # Mehrzeiliger Befehl
-          docker tag docker.io/library/catalog:0.0.1-SNAPSHOT ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest # Image taggen
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest # Image zu Docker Hub pushen
+        run: | # Mehrzeiliger Befehl / Image taggen / Image zu Docker Hub pushen
+          docker tag docker.io/library/catalog:0.0.1-SNAPSHOT ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest 
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/catalog:latest 
   
 
       - name: Upload Surefire Reports # Upload der Surefire Reports als Artefakt (Testresultate publizieren)
