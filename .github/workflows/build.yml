@@ -16,7 +16,14 @@ jobs: # Definition der Jobs (build, test, deploy, etc.)
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven # Maven Abhängigkeiten cachen -> BONUS
+
+      - name: Cache Maven Repository # Maven Repository cachen (Bonus)
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Build and Test with Maven # Maven Build & Test
         run: mvn --batch-mode --update-snapshots verify # beinhaltet compile, unit-tests, integration tests, package, verify
